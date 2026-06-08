@@ -1,0 +1,14 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "lume-sdk"
+version = "0.0.1"
+description = "Python SDK for Lume LLM observability"
+license = { text = "MIT" }
+requires-python = ">=3.9"
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/your-handle/lume"
