@@ -1,0 +1,8 @@
+name = "lume-ingestion"
+main = "src/index.ts"
+compatibility_date = "2025-06-08"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+# Non-secret config vars go here.
+# Secrets (DATABASE_URL) are set via: wrangler secret put DATABASE_URL
