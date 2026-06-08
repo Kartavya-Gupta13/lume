@@ -58,7 +58,7 @@ Out of v1:
 ## Success criteria
 
 - 100 GitHub stars in the first 30 days post-launch
-- 10 unique self-host deployments (counted via opt-in telemetry ping with explicit user consent)
+- 10 unique self-host deployments (counted manually via GitHub Issues / Discord pings post-launch — opt-in telemetry deferred to v1.5)
 - I instrument my own PR review agent and scratchpad with it and use it daily
 - 3 people who aren't me try it and give feedback within 30 days
 

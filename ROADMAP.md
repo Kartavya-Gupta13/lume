@@ -10,15 +10,18 @@ Get the skeleton standing up.
 - [ ] Create `apps/web` (Next.js 15, App Router, TS strict, Tailwind v4, shadcn/ui)
 - [ ] Create `apps/ingestion` (Hono + Cloudflare Workers, wrangler.toml)
 - [ ] Create `packages/db` (Drizzle schema + client)
-- [ ] Create empty `packages/sdk-ts` and `packages/sdk-py` (just `package.json` / `pyproject.toml`, no code yet)
+- [ ] Create empty `packages/sdk-ts` and `packages/sdk-py` (just `package.json` / `pyproject.toml`, no code yet — Python SDK is post-v1)
 - [ ] Set up Neon Postgres project. Add `DATABASE_URL` to `.env.local` and Vercel
 - [ ] Set up `packages/db` with a tiny test schema (just `users` table)
 - [ ] Run `pnpm db:generate && pnpm db:push` to verify Drizzle works end-to-end
 - [ ] Deploy `apps/web` to Vercel manually (you, not Claude Code)
 - [ ] Deploy `apps/ingestion` to Cloudflare Workers manually
-- [ ] Set up GitHub Actions: `typecheck` + `lint` on PR. No deploy step yet.
 - [ ] Add `CLAUDE.md`, `PRD.md`, `ARCHITECTURE.md`, `ROADMAP.md`, `CONVENTIONS.md`, `README.md`, `.env.example` to the repo root
-- [ ] First commit: `chore: scaffold monorepo`
+- [ ] Create `packages/ui` with `package.json`, `src/lib/utils.ts` (`cn()`), and shadcn init config
+- [ ] Add `.nvmrc` pinning Node 20 LTS
+- [ ] Create GitHub repo and push (manual — Kartavya)
+- [ ] Set up GitHub Actions: `typecheck` + `lint` on PR (requires GitHub remote — do after push)
+- [ ] Monorepo scaffold commit: `chore: scaffold monorepo` (first commit `chore: scaffold docs` already exists)
 
 **Done when:** the empty web app loads on Vercel, the ingestion service returns 200 from `/v1/health` on Cloudflare, and pushing to GitHub runs CI green.
 
@@ -40,6 +43,7 @@ Build the multi-tenant skeleton.
   - [ ] Revoke key
 - [ ] Sidebar nav: org switcher + project switcher
 - [ ] Top-level `app/(dashboard)/layout.tsx` enforces auth
+- [ ] Create `apps/web/lib/env.ts`: Zod schema validating all required env vars; crash on startup if any missing
 
 **Done when:** A new user can sign up, create an org, create a project, create an API key, and see it once in a modal. Refreshing the page shows only the prefix.
 
@@ -57,6 +61,7 @@ Make the ingestion endpoint accept traces.
   - [ ] `POST /v1/batch` accepts mixed payload.
   - [ ] Reject payloads > 1MB total. Truncate individual `input`/`output` at 256KB with `truncated: true` flag.
   - [ ] `GET /v1/health` returns `{ status: 'ok' }`.
+  - [ ] API key lookup uses `sha256(incoming_key)` — not bcrypt — to match stored `key_hash`
 - [ ] Test by hand: hit the ingestion endpoint with `curl` and a project API key. Verify rows land in Postgres.
 
 **Done when:** You can `curl -X POST -H "Authorization: Bearer <key>" -d '<trace>' <ingestion_url>/v1/traces` and see a trace appear in Postgres.
@@ -81,7 +86,7 @@ This is the "Linear UI" moment. Polish hard. It's the project's whole visual ide
 - [ ] Empty states designed, not skipped
 - [ ] Mobile rendering does not need to be pretty, but should not crash
 
-**Done when:** Looking at a real trace you instrumented from your other projects feels noticeably better than looking at the same data in Langfuse.
+**Done when:** You can POST a trace via curl using a project API key, navigate to the trace detail page, and see the span tree render correctly. The real dogfooding test (vs Langfuse) happens at the end of Phase 4 once the SDK exists.
 
 ## Phase 4: TypeScript SDK + dogfooding (Days 8-10)
 
@@ -95,7 +100,8 @@ Real instrumentation drives real bug discovery.
   - [ ] Auto-instrumentation helpers: `wrap.openai(client)`, `wrap.anthropic(client)`: proxies that emit spans automatically
   - [ ] Batching: queue events in memory, flush every 1s or 100 items
   - [ ] Graceful failure: ingestion errors logged once, never throw into user code
-  - [ ] Publish to npm as `@lume/sdk` (or chosen name)
+  - [ ] Configure `tsup` in `packages/sdk-ts` (outputs CJS + ESM + types)
+  - [ ] Publish to npm as `@lume/sdk`
 - [ ] Instrument your PR review agent project with `@lume/sdk`
 - [ ] Watch traces flow into the dashboard for a real workload
 - [ ] Fix the bugs you find. There will be bugs.
@@ -110,6 +116,7 @@ The other half of the product.
 - [ ] Set up Inngest:
   - [ ] Create Inngest account
   - [ ] Add Inngest SDK to `apps/web`
+  - [ ] Wire up `POST /api/inngest` Inngest webhook endpoint in `apps/web`
   - [ ] Register one function: `runEvalJob({ evalRunId })`
 - [ ] `/[orgSlug]/[projectSlug]/evaluations` page:
   - [ ] List evaluations
@@ -152,7 +159,7 @@ The other half of the product.
 ## Phase 7: Self-host (Day 14)
 
 - [ ] `Dockerfile` for `apps/web`
-- [ ] `Dockerfile` for `apps/ingestion`
+- [ ] `Dockerfile` for `apps/ingestion` — uses `wrangler dev` as entry point (not a standard Node process; CF Workers apps cannot run as plain containers)
 - [ ] `docker-compose.yml` bringing up:
   - [ ] `postgres:16` with `pgvector` (use `pgvector/pgvector:pg16` image)
   - [ ] web app on `:3000`
@@ -169,6 +176,7 @@ The other half of the product.
 - [ ] README with screenshots, GIF demo, quick start
 - [ ] Open source the repo (MIT license)
 - [ ] Write the launch tweet thread (you said no X but write it anyway, you might change your mind)
+- [ ] Note: opt-in telemetry ping deferred to post-launch backlog (no implementation path in v1)
 - [ ] Post to relevant subreddits (`r/LocalLLaMA`, `r/MachineLearning`, `r/selfhosted`)
 - [ ] Submit to Product Hunt
 - [ ] Tell the founders you want to work for: link, no pitch

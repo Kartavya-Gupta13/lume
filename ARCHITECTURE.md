@@ -127,7 +127,7 @@ projects: {
 api_keys: {
   id: uuid primary key,
   project_id: uuid references projects not null,
-  key_hash: text not null,           // store hash, not key
+  key_hash: text not null,           // sha256(raw_key) via Web Crypto API — NOT bcrypt (CF Workers incompatible)
   prefix: text not null,             // last 4 chars for UI display
   name: text not null,
   created_at: timestamp default now,
@@ -238,6 +238,8 @@ api_keys (key_hash)                         -- auth lookup
 - We store inputs and outputs as `jsonb`. Big payloads can blow Postgres up. In v1 we'll cap individual `input`/`output` at 256KB at ingestion time and store a `truncated: true` flag in the column when capped. Later, large payloads go to object storage (R2) with a reference.
 - `metadata` is freeform `jsonb` on traces and spans. Encourages users to attach whatever they want.
 - pgvector is included in the stack but unused in v1. We add it when we ship "find similar traces" in v1.5.
+- Better-Auth manages its own auth tables (`users`, `sessions`, `accounts`) via its Drizzle adapter. These are NOT in `packages/db/schema/` — they are migrated by Better-Auth separately from `pnpm db:generate`.
+- Large payloads (>256KB) are truncated with a `truncated: true` flag in v1. Object storage (R2) for full payload references is a v1.5 addition.5.
 
 ## API contracts
 
@@ -277,7 +279,7 @@ GET /v1/health
 
 ### Web app (`apps/web`, Next.js API routes + server actions)
 
-All routes require an authenticated session.
+All routes require an authenticated session. All routes validate that the authenticated user belongs to the org and project being queried before returning data. Cross-tenant access returns 403.
 
 ```
 GET  /api/projects
@@ -297,6 +299,8 @@ GET  /api/evaluations?project=...
 POST /api/evaluations/:id/run                // kick off run
 GET  /api/evaluations/:id/runs               // history
 GET  /api/eval-runs/:id                      // results
+
+POST /api/inngest                            // Inngest webhook — receives job events; must be registered with Inngest dashboard
 ```
 
 ## Repository layout
@@ -334,12 +338,26 @@ GET  /api/eval-runs/:id                      // results
 │   ├── sdk-py/                 # Python SDK (published to PyPI)
 │   │   ├── lume/
 │   │   └── pyproject.toml
-│   └── ui/                     # shared shadcn components (optional)
+│   └── ui/                     # shadcn components + cn() utility (required — alias @workspace/ui)
+│       ├── src/
+│       │   └── lib/
+│       │       └── utils.ts    # cn() lives here
+│       └── package.json
 ├── turbo.json
 ├── pnpm-workspace.yaml
 ├── docker-compose.yml          # for self-host
 └── package.json
 ```
+
+## packages/db clients
+
+`packages/db` exports two Drizzle clients:
+- `db`: uses `postgres` package — for Next.js (server-side Node runtime)
+- `dbEdge`: uses `@neondatabase/serverless` HTTP transport — for Cloudflare Workers (ingestion)
+
+CF Workers cannot use TCP connections, so the standard `postgres` driver fails at runtime. Always import the correct client for your runtime. Never use `db` inside `apps/ingestion`.
+
+Next.js serverless functions use `?pgbouncer=true` in `DATABASE_URL` to avoid connection exhaustion. No external PgBouncer required.
 
 ## Decisions log
 
@@ -356,6 +374,17 @@ Every architectural decision lives here with date and one-line rationale. Append
 | 2026-06-08 | jsonb for input/output with 256KB cap                     | Simple. Move to R2 with reference for larger payloads in v1.5.                                  |
 | 2026-06-08 | pgvector included but unused in v1                        | "Find similar traces" is post-launch. Including extension now avoids a later migration.         |
 | 2026-06-08 | Better-Auth email + magic link only                       | Skip OAuth in v1. Add Google/GitHub in v1.5.                                                    |
+| 2026-06-08 | API key hashing: SHA-256 via Web Crypto API, not bcrypt   | bcrypt requires native bindings unavailable in CF Workers runtime. API keys are long random strings, not passwords — SHA-256 is appropriate. |
+| 2026-06-08 | Workers → Neon transport: `@neondatabase/serverless` HTTP driver | CF Workers cannot use TCP connections. `packages/db` exports two clients: `db` (postgres, for Next.js) and `dbEdge` (neon serverless HTTP, for ingestion). |
+| 2026-06-08 | Connection pooling: Neon pooler URL + serverless driver    | No external PgBouncer. Next.js uses `?pgbouncer=true` in DATABASE_URL. Ingestion uses Neon serverless driver (stateless HTTP). |
+| 2026-06-08 | Better-Auth + Drizzle: use Better-Auth's Drizzle adapter  | Better-Auth manages its own auth tables. Do not manually define them in `packages/db/schema/`. |
+| 2026-06-08 | `packages/ui` non-optional, created in Phase 0            | `@workspace/ui` alias is defined in CONVENTIONS.md. A defined alias for a nonexistent package breaks `typecheck`. |
+| 2026-06-08 | SDK build tool: `tsup` for `packages/sdk-ts`              | Standard TS package bundler. Outputs CJS + ESM + types. Required for `npm publish`. |
+| 2026-06-08 | Python SDK: skeleton in v1, full implementation post-v1   | Solo 14-day build. TS SDK is dogfooded; Python SDK gets real implementation after launch. |
+| 2026-06-08 | Compare eval view: UI-only, no schema change              | User selects two `eval_runs` manually. No `comparisons` table needed for v1. |
+| 2026-06-08 | Opt-in telemetry ping: cut from v1                        | No implementation path. Moved to post-launch backlog. Success criteria reworded to manual count. |
+| 2026-06-08 | Ingestion self-host: `wrangler dev` in Docker             | CF Workers apps cannot run as standard Docker containers. |
+| 2026-06-08 | CORS on ingestion: allow all origins in v1                | Ingestion is public-facing HTTP. Broad CORS in v1; tighten post-launch. |
 
 When a new decision comes up:
 1. Propose it.
@@ -375,3 +404,5 @@ See `CONVENTIONS.md` for the canonical `.env.example`. Never commit real values.
 - Inngest dev server on port 8288
 
 Self-host instructions live in `README.md` once v1 is shipped.
+
+Note: `apps/ingestion` is a Cloudflare Workers app and cannot run as a standard Docker container. In the self-host stack it runs via `wrangler dev` inside a Node container. The `Dockerfile` for ingestion uses `wrangler dev` as its entry point.

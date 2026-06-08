@@ -63,6 +63,8 @@ How we write and organize code in this repo. Claude Code reads this. So do you.
 - Never `drop` or `truncate` in a migration unless explicitly approved.
 - Queries: prefer `db.query.traces.findMany({ ... })` (relational API) for reads, `db.insert/update/delete` for writes.
 - For complex aggregations, raw SQL via `sql\`\`` is fine but document the intent above it.
+- `packages/db` exports two clients: `db` (uses `postgres` package, for Next.js Node runtime) and `dbEdge` (uses `@neondatabase/serverless` HTTP transport, for Cloudflare Workers). Always import the correct one for your runtime.
+- Better-Auth manages its own schema via its Drizzle adapter. Do not write `users`, `sessions`, or `accounts` tables manually into `packages/db/schema/`. Run Better-Auth migrations separately from `pnpm db:generate`.
 
 ## API design
 
@@ -77,7 +79,7 @@ How we write and organize code in this repo. Claude Code reads this. So do you.
 - Components functional only. No class components.
 - Hooks: extract to `hooks/use-x.ts` when reused across 2+ components.
 - Tailwind utilities directly in JSX. No `@apply` in CSS files (we want HMR-friendly, grep-friendly classes).
-- Use `cn()` from `lib/utils.ts` to merge class names.
+- Use `cn()` from `@workspace/ui/lib/utils` to merge class names (lives in `packages/ui`, not a per-app file).
 - shadcn/ui as the component base. Copy components into `components/ui/`, modify freely.
 - Icons from `lucide-react`. Don't bring in a second icon library.
 - Colors and spacing through Tailwind tokens, not arbitrary values. Arbitrary (`w-[372px]`) only when no token fits and the value is intentional.
@@ -121,7 +123,7 @@ EMAIL_FROM="noreply@yourdomain.com"
 # LLM provider keys (server-side only)
 ANTHROPIC_API_KEY=""
 OPENAI_API_KEY=""
-GEMINI_API_KEY=""
+GEMINI_API_KEY=""           # Optional: alternative eval judge model (e.g. Gemini Flash)
 
 # Inngest
 INNGEST_EVENT_KEY=""
