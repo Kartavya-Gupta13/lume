@@ -8,7 +8,7 @@ This file is your operating manual. Read it at the start of every session.
 
 ## Project status
 
-Currently in: **Phase 0: Setup (not started)**
+Currently in: **Phase 0: Setup (in progress — Vercel + CF Workers deploy remaining)**
 
 Working roadmap: `ROADMAP.md`. Each phase has a checklist. Mark phases complete as we ship them. Do not start the next phase without confirming this one is done.
 
@@ -46,7 +46,7 @@ Read these before writing code.
 
 1. **Ask before adding dependencies.** Every new package is future maintenance. Justify it in one sentence.
 2. **Never run migrations without confirmation.** Show the generated migration file, wait for "ok" before applying.
-3. **Never deploy.** Kartavya deploys manually. Never run `vercel`, `wrangler deploy`, or `gh release` on his behalf.
+3. **Deploy with confirmation.** Ask before running `vercel`, `wrangler deploy`, or `gh release`. Once Kartavya says "go", run the command directly.
 4. **No `any` in TypeScript.** Use `unknown` + narrowing, or define the type. No `@ts-ignore` without a one-line comment explaining why.
 5. **Server Components by default.** Only add `"use client"` when interactivity actually requires it.
 6. **One concern per file.** Do not pack three features into one route file.
