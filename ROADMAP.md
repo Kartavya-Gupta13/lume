@@ -6,22 +6,22 @@ Phase-by-phase build plan. Each phase has a checklist. Mark items as you ship th
 
 Get the skeleton standing up.
 
-- [ ] Init pnpm monorepo with Turborepo
-- [ ] Create `apps/web` (Next.js 15, App Router, TS strict, Tailwind v4, shadcn/ui)
-- [ ] Create `apps/ingestion` (Hono + Cloudflare Workers, wrangler.toml)
-- [ ] Create `packages/db` (Drizzle schema + client)
-- [ ] Create empty `packages/sdk-ts` and `packages/sdk-py` (just `package.json` / `pyproject.toml`, no code yet — Python SDK is post-v1)
+- [x] Init pnpm monorepo with Turborepo
+- [x] Create `apps/web` (Next.js 15, App Router, TS strict, Tailwind v4, shadcn/ui)
+- [x] Create `apps/ingestion` (Hono + Cloudflare Workers, wrangler.toml)
+- [x] Create `packages/db` (Drizzle schema + client)
+- [x] Create empty `packages/sdk-ts` and `packages/sdk-py` (just `package.json` / `pyproject.toml`, no code yet — Python SDK is post-v1)
 - [ ] Set up Neon Postgres project. Add `DATABASE_URL` to `.env.local` and Vercel
-- [ ] Set up `packages/db` with a tiny test schema (just `users` table)
+- [x] Set up `packages/db` with a tiny test schema (just `users` table)
 - [ ] Run `pnpm db:generate && pnpm db:push` to verify Drizzle works end-to-end
 - [ ] Deploy `apps/web` to Vercel manually (you, not Claude Code)
 - [ ] Deploy `apps/ingestion` to Cloudflare Workers manually
-- [ ] Add `CLAUDE.md`, `PRD.md`, `ARCHITECTURE.md`, `ROADMAP.md`, `CONVENTIONS.md`, `README.md`, `.env.example` to the repo root
-- [ ] Create `packages/ui` with `package.json`, `src/lib/utils.ts` (`cn()`), and shadcn init config
-- [ ] Add `.nvmrc` pinning Node 20 LTS
-- [ ] Create GitHub repo and push (manual — Kartavya)
-- [ ] Set up GitHub Actions: `typecheck` + `lint` on PR (requires GitHub remote — do after push)
-- [ ] Monorepo scaffold commit: `chore: scaffold monorepo` (first commit `chore: scaffold docs` already exists)
+- [x] Add `CLAUDE.md`, `PRD.md`, `ARCHITECTURE.md`, `ROADMAP.md`, `CONVENTIONS.md`, `README.md`, `.env.example` to the repo root
+- [x] Create `packages/ui` with `package.json`, `src/lib/utils.ts` (`cn()`), and shadcn init config
+- [x] Add `.nvmrc` pinning Node 20 LTS
+- [x] Create GitHub repo and push (manual — Kartavya)
+- [x] Set up GitHub Actions: `typecheck` + `lint` on PR (requires GitHub remote — do after push)
+- [x] Monorepo scaffold commit: `chore: scaffold monorepo` (first commit `chore: scaffold docs` already exists)
 
 **Done when:** the empty web app loads on Vercel, the ingestion service returns 200 from `/v1/health` on Cloudflare, and pushing to GitHub runs CI green.
 
