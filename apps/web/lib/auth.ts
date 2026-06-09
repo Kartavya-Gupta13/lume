@@ -17,7 +17,7 @@ export const auth = betterAuth({
     magicLink({
       sendMagicLink: async ({ email, url }) => {
         await resend.emails.send({
-          from: "Lume <noreply@lume.dev>",
+          from: "Lume <onboarding@resend.dev>",
           to: email,
           subject: "Sign in to Lume",
           html: `<p>Click <a href="${url}">here</a> to sign in. Link expires in 10 minutes.</p>`,
