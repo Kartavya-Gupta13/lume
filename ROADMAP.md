@@ -11,11 +11,11 @@ Get the skeleton standing up.
 - [x] Create `apps/ingestion` (Hono + Cloudflare Workers, wrangler.toml)
 - [x] Create `packages/db` (Drizzle schema + client)
 - [x] Create empty `packages/sdk-ts` and `packages/sdk-py` (just `package.json` / `pyproject.toml`, no code yet — Python SDK is post-v1)
-- [ ] Set up Neon Postgres project. Add `DATABASE_URL` to `.env.local` and Vercel
+- [x] Set up Neon Postgres project. Add `DATABASE_URL` to `.env.local` and Vercel
 - [x] Set up `packages/db` with a tiny test schema (just `users` table)
-- [ ] Run `pnpm db:generate && pnpm db:push` to verify Drizzle works end-to-end
-- [ ] Deploy `apps/web` to Vercel manually (you, not Claude Code)
-- [ ] Deploy `apps/ingestion` to Cloudflare Workers manually
+- [x] Run `pnpm db:generate && pnpm db:push` to verify Drizzle works end-to-end
+- [x] Deploy `apps/web` to Vercel manually (you, not Claude Code)
+- [x] Deploy `apps/ingestion` to Cloudflare Workers manually
 - [x] Add `CLAUDE.md`, `PRD.md`, `ARCHITECTURE.md`, `ROADMAP.md`, `CONVENTIONS.md`, `README.md`, `.env.example` to the repo root
 - [x] Create `packages/ui` with `package.json`, `src/lib/utils.ts` (`cn()`), and shadcn init config
 - [x] Add `.nvmrc` pinning Node 20 LTS

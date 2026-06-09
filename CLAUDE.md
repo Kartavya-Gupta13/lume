@@ -8,7 +8,7 @@ This file is your operating manual. Read it at the start of every session.
 
 ## Project status
 
-Currently in: **Phase 0: Setup (in progress — Vercel + CF Workers deploy remaining)**
+Currently in: **Phase 1: Auth + Org/Project model (not started)**
 
 Working roadmap: `ROADMAP.md`. Each phase has a checklist. Mark phases complete as we ship them. Do not start the next phase without confirming this one is done.
 
