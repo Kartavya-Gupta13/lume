@@ -29,21 +29,21 @@ Get the skeleton standing up.
 
 Build the multi-tenant skeleton.
 
-- [ ] Add Better-Auth to `apps/web` with email + magic link only
-- [ ] Add `users`, `organizations`, `organization_members`, `projects`, `api_keys` tables to `packages/db`
-- [ ] Generate + apply migration
-- [ ] Sign-up flow: email → magic link → land on `/onboarding`
-- [ ] Onboarding: create first organization with name and slug
-- [ ] After onboarding: land in `/[orgSlug]` with empty state
-- [ ] "Create project" CTA: form with name + slug → creates project, lands in `/[orgSlug]/[projectSlug]`
-- [ ] Project settings page at `/[orgSlug]/[projectSlug]/settings`
-- [ ] "API Keys" section in settings:
-  - [ ] Create API key (generate random, hash with bcrypt, return raw key ONCE in a modal, never again)
-  - [ ] List existing keys (show only prefix + last 4)
-  - [ ] Revoke key
-- [ ] Sidebar nav: org switcher + project switcher
-- [ ] Top-level `app/(dashboard)/layout.tsx` enforces auth
-- [ ] Create `apps/web/lib/env.ts`: Zod schema validating all required env vars; crash on startup if any missing
+- [x] Add Better-Auth to `apps/web` with email + magic link only
+- [x] Add `users`, `organizations`, `organization_members`, `projects`, `api_keys` tables to `packages/db`
+- [x] Generate + apply migration
+- [x] Sign-up flow: email → magic link → land on `/onboarding`
+- [x] Onboarding: create first organization with name and slug
+- [x] After onboarding: land in `/[orgSlug]` with empty state
+- [x] "Create project" CTA: form with name + slug → creates project, lands in `/[orgSlug]/[projectSlug]`
+- [x] Project settings page at `/[orgSlug]/[projectSlug]/settings`
+- [x] "API Keys" section in settings:
+  - [x] Create API key (generate random, hash with sha256, return raw key ONCE in a modal, never again)
+  - [x] List existing keys (show only prefix + last 4)
+  - [x] Revoke key
+- [x] Sidebar nav: org switcher + project switcher
+- [x] Top-level `app/(dashboard)/layout.tsx` enforces auth
+- [x] Create `apps/web/lib/env.ts`: Zod schema validating all required env vars; crash on startup if any missing
 
 **Done when:** A new user can sign up, create an org, create a project, create an API key, and see it once in a modal. Refreshing the page shows only the prefix.
 

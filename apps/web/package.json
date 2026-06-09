@@ -11,9 +11,13 @@
   "dependencies": {
     "@workspace/db": "workspace:*",
     "@workspace/ui": "workspace:*",
+    "better-auth": "^1.6.15",
+    "drizzle-orm": "^0.45.2",
     "next": "16.2.7",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "resend": "^6.12.4",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

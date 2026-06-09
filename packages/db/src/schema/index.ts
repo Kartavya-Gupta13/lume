@@ -1,6 +1,5 @@
-// Schema files go here, one per logical group:
-// auth.ts   — Better-Auth managed (do not add manually)
-// traces.ts — traces, spans, events
-// evals.ts  — evaluations, eval_runs, eval_results
-
-export * from "./ping";
+export * from "./auth";
+export * from "./orgs";
+export * from "./projects";
+export * from "./api_keys";
+// ping table removed — superseded by auth schema migration
