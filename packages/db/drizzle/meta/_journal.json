@@ -15,6 +15,13 @@
       "when": 1781028107868,
       "tag": "0001_abandoned_proteus",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1781080684944,
+      "tag": "0002_glorious_star_brand",
+      "breakpoints": true
     }
   ]
 }

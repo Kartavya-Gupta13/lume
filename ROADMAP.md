@@ -51,8 +51,8 @@ Build the multi-tenant skeleton.
 
 Make the ingestion endpoint accept traces.
 
-- [ ] Add `traces`, `spans`, `events` tables to `packages/db`
-- [ ] Generate + apply migration
+- [x] Add `traces`, `spans`, `events` tables to `packages/db`
+- [x] Generate + apply migration
 - [ ] In `apps/ingestion`:
   - [ ] Middleware: parse `Authorization: Bearer <api_key>`, hash, look up project. 401 if not found or revoked. Set `last_used_at`.
   - [ ] `POST /v1/traces` accepts a trace (with optional nested spans). Validate with Zod. Insert in one transaction.
