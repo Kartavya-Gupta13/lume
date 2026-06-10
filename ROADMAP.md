@@ -76,7 +76,7 @@ This is the "Linear UI" moment. Polish hard. It's the project's whole visual ide
   - [ ] Filters: time range, user_id_external, latency >, cost > (deferred)
   - [x] Each row: name, status pill, duration, tokens, cost, started_at relative, tags
   - [x] Click row → trace detail (stub page, full detail page below is separate)
-- [ ] `/[orgSlug]/[projectSlug]/traces/[id]` detail page:
+- [x] `/[orgSlug]/[projectSlug]/traces/[id]` detail page:
   - [x] Header: name, status, duration, tokens, cost, started_at absolute + relative, tags
   - [x] Span tree: render the parent-child tree of spans with collapse/expand
   - [x] Each span row: icon for type (llm_call, tool_call, agent, retrieval, custom), name, duration bar (gantt-style), status pill
