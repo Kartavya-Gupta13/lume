@@ -1,5 +1,7 @@
 export { Lume } from "./client";
 export { Tracer } from "./tracer";
+export { getCurrentTracer } from "./context";
+export * as wrap from "./wrap";
 export type {
   LumeOptions,
   SpanAttributes,

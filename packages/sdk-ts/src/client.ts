@@ -1,4 +1,5 @@
 import { BatchQueue } from "./batch-queue";
+import { runWithTracer } from "./context";
 import { Tracer } from "./tracer";
 import type { LumeOptions, TraceInput } from "./types";
 
@@ -28,7 +29,7 @@ export class Lume {
     const tracer = new Tracer(this.queue, id, undefined);
 
     try {
-      const result = await fn(tracer);
+      const result = await runWithTracer(tracer, () => fn(tracer));
       const endedAt = new Date();
       const trace: TraceInput = {
         id,

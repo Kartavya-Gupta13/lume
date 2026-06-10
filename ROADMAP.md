@@ -98,7 +98,7 @@ Real instrumentation drives real bug discovery.
   - [x] `lume.trace(name, fn)`: creates a trace, runs `fn` with a tracer context, ends trace on resolve/reject
   - [x] Inside the function: `tracer.span('name', { type: 'llm_call', input, model, ... }, fn)` for spans
   - [x] `tracer.event('message', { level, attributes })` for events
-  - [ ] Auto-instrumentation helpers: `wrap.openai(client)`, `wrap.anthropic(client)`: proxies that emit spans automatically
+  - [x] Auto-instrumentation helpers: `wrap.openai(client)`, `wrap.anthropic(client)`: proxies that emit spans automatically
   - [x] Batching: queue events in memory, flush every 1s or 100 items
   - [x] Graceful failure: ingestion errors logged once, never throw into user code
   - [x] Configure `tsup` in `packages/sdk-ts` (outputs CJS + ESM + types)

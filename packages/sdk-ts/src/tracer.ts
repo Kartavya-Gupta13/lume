@@ -1,4 +1,5 @@
 import type { BatchQueue } from "./batch-queue";
+import { runWithTracer } from "./context";
 import type { EventAttributes, SpanAttributes, SpanWithTraceId } from "./types";
 
 function serializeError(err: unknown): unknown {
@@ -25,7 +26,7 @@ export class Tracer {
     const childTracer = new Tracer(this.queue, this.traceId, id);
 
     try {
-      const result = await fn(childTracer);
+      const result = await runWithTracer(childTracer, () => fn(childTracer));
       const endedAt = new Date();
       const span: SpanWithTraceId = {
         id,
