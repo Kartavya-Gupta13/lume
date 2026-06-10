@@ -385,6 +385,7 @@ Every architectural decision lives here with date and one-line rationale. Append
 | 2026-06-08 | Opt-in telemetry ping: cut from v1                        | No implementation path. Moved to post-launch backlog. Success criteria reworded to manual count. |
 | 2026-06-08 | Ingestion self-host: `wrangler dev` in Docker             | CF Workers apps cannot run as standard Docker containers. |
 | 2026-06-08 | CORS on ingestion: allow all origins in v1                | Ingestion is public-facing HTTP. Broad CORS in v1; tighten post-launch. |
+| 2026-06-10 | Ingestion writes use `db.batch()`, not `db.transaction()` | neon-http driver has no interactive transaction support (`drizzle-orm` throws). `db.batch()` sends all queries in one HTTP round-trip, executed atomically by Neon — same guarantee as the "single transaction" requirement. |
 
 When a new decision comes up:
 1. Propose it.
