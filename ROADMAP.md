@@ -70,13 +70,14 @@ Make the ingestion endpoint accept traces.
 
 This is the "Linear UI" moment. Polish hard. It's the project's whole visual identity.
 
-- [ ] `/[orgSlug]/[projectSlug]/traces` page:
-  - [ ] Server component lists traces, paginated (cursor-based), sorted by `started_at desc`
-  - [ ] Filters: status, time range, user_id_external, free text on name/metadata, latency >, cost >
-  - [ ] Each row: name, status pill, duration, tokens, cost, started_at relative, tags
-  - [ ] Click row → trace detail
+- [x] `/[orgSlug]/[projectSlug]/traces` page:
+  - [x] Server component lists traces, paginated (cursor-based), sorted by `started_at desc`
+  - [x] Filters: status, free text on name
+  - [ ] Filters: time range, user_id_external, latency >, cost > (deferred)
+  - [x] Each row: name, status pill, duration, tokens, cost, started_at relative, tags
+  - [x] Click row → trace detail (stub page, full detail page below is separate)
 - [ ] `/[orgSlug]/[projectSlug]/traces/[id]` detail page:
-  - [ ] Header: name, status, duration, tokens, cost, started_at absolute + relative, tags
+  - [x] Header: name, status, duration, tokens, cost, started_at absolute + relative, tags
   - [ ] Span tree: render the parent-child tree of spans with collapse/expand
   - [ ] Each span row: icon for type (llm_call, tool_call, agent, retrieval, custom), name, duration bar (gantt-style), status pill
   - [ ] Click span → side panel with input/output, metadata, events
