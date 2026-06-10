@@ -1,3 +1,11 @@
+import type { BadgeProps } from "@workspace/ui";
+
+export const STATUS_BADGE_VARIANT: Record<string, BadgeProps["variant"]> = {
+  ok: "success",
+  error: "destructive",
+  in_progress: "pending",
+};
+
 const relativeTimeFormatter = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
 const costFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -43,4 +51,27 @@ export function formatTokens(input: number | null, output: number | null): strin
 export function formatCost(costUsd: string | null): string {
   if (costUsd == null) return "—";
   return costFormatter.format(Number(costUsd));
+}
+
+/**
+ * Returns left/width offsets (0-100) for a span's gantt bar, relative to the
+ * trace's start time and total duration.
+ */
+export function gantt(
+  traceStartedAt: Date,
+  traceLatencyMs: number | null,
+  spanStartedAt: Date,
+  spanLatencyMs: number | null,
+): { leftPct: number; widthPct: number } {
+  if (!traceLatencyMs || traceLatencyMs <= 0) return { leftPct: 0, widthPct: 100 };
+
+  const offsetMs = spanStartedAt.getTime() - traceStartedAt.getTime();
+  const leftPct = clampPct((offsetMs / traceLatencyMs) * 100);
+  const widthPct = Math.max(clampPct(((spanLatencyMs ?? 0) / traceLatencyMs) * 100), 0.5);
+
+  return { leftPct, widthPct: Math.min(widthPct, 100 - leftPct) };
+}
+
+function clampPct(value: number): number {
+  return Math.min(Math.max(value, 0), 100);
 }

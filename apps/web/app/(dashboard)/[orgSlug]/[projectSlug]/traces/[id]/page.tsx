@@ -1,16 +1,8 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { project, organization, trace } from "@workspace/db";
-import { Badge, type BadgeProps } from "@workspace/ui";
-import { formatCost, formatDuration, formatRelativeTime, formatTokens } from "../format";
-
-const STATUS_BADGE_VARIANT: Record<string, BadgeProps["variant"]> = {
-  ok: "success",
-  error: "destructive",
-  in_progress: "pending",
-};
+import { project, organization, trace, span, event } from "@workspace/db";
+import { TraceDetailView, type SpanNode } from "./trace-detail-view";
 
 export default async function TraceDetailPage({
   params,
@@ -43,42 +35,60 @@ export default async function TraceDetailPage({
 
   if (!t) notFound();
 
+  const spans = await db
+    .select()
+    .from(span)
+    .where(eq(span.traceId, t.id))
+    .orderBy(span.startedAt);
+
+  const events =
+    spans.length === 0
+      ? []
+      : await db
+          .select()
+          .from(event)
+          .where(
+            inArray(
+              event.spanId,
+              spans.map((s) => s.id),
+            ),
+          )
+          .orderBy(event.timestamp);
+
+  const eventsBySpanId = new Map<string, (typeof events)[number][]>();
+  for (const e of events) {
+    const list = eventsBySpanId.get(e.spanId) ?? [];
+    list.push(e);
+    eventsBySpanId.set(e.spanId, list);
+  }
+
+  const spanTree = buildSpanTree(spans);
+
   return (
-    <div className="px-6 py-8 space-y-6">
-      <Link
-        href={`/${orgSlug}/${projectSlug}/traces`}
-        className="text-sm text-muted-foreground hover:text-foreground"
-      >
-        ← Traces
-      </Link>
-
-      <div className="space-y-2">
-        <div className="flex items-center gap-2">
-          <h1 className="text-lg font-semibold">{t.name}</h1>
-          <Badge variant={STATUS_BADGE_VARIANT[t.status]}>{t.status}</Badge>
-        </div>
-        <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm text-muted-foreground">
-          <span>Duration: {formatDuration(t.latencyMs)}</span>
-          <span>Tokens: {formatTokens(t.totalTokensInput, t.totalTokensOutput)}</span>
-          <span>Cost: {formatCost(t.totalCostUsd)}</span>
-          <span title={t.startedAt.toISOString()}>
-            Started: {t.startedAt.toLocaleString()} ({formatRelativeTime(t.startedAt)})
-          </span>
-        </div>
-        {t.tags && t.tags.length > 0 && (
-          <div className="flex gap-1">
-            {t.tags.map((tag) => (
-              <Badge key={tag} variant="secondary">
-                {tag}
-              </Badge>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <div className="rounded-md border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
-        Span tree coming soon.
-      </div>
-    </div>
+    <TraceDetailView
+      orgSlug={orgSlug}
+      projectSlug={projectSlug}
+      trace={t}
+      spanTree={spanTree}
+      eventsBySpanId={Object.fromEntries(eventsBySpanId)}
+    />
   );
+}
+
+function buildSpanTree(spans: (typeof span.$inferSelect)[]): SpanNode[] {
+  const nodesById = new Map<string, SpanNode>();
+  for (const s of spans) {
+    nodesById.set(s.id, { ...s, children: [] });
+  }
+
+  const roots: SpanNode[] = [];
+  for (const node of nodesById.values()) {
+    if (node.parentSpanId && nodesById.has(node.parentSpanId)) {
+      nodesById.get(node.parentSpanId)!.children.push(node);
+    } else {
+      roots.push(node);
+    }
+  }
+
+  return roots;
 }

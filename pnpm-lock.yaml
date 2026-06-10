@@ -57,6 +57,9 @@ importers:
       drizzle-orm:
         specifier: ^0.45.2
         version: 0.45.2(@cloudflare/workers-types@4.20260608.1)(@neondatabase/serverless@0.10.4)(@types/pg@8.11.6)(gel@2.2.0)(kysely@0.29.2)(postgres@3.4.9)
+      lucide-react:
+        specifier: ^0.454.0
+        version: 0.454.0(react@19.2.4)
       next:
         specifier: 16.2.7
         version: 16.2.7(react-dom@19.2.4(react@19.2.4))(react@19.2.4)

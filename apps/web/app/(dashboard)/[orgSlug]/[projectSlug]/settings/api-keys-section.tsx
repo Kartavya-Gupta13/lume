@@ -167,9 +167,9 @@ export function ApiKeysSection({
                   {k.prefix}…{k.lastFour}
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  Created {new Date(k.createdAt).toLocaleDateString()}
+                  Created {new Date(k.createdAt).toLocaleDateString("en-US")}
                   {k.lastUsedAt &&
-                    ` · Last used ${new Date(k.lastUsedAt).toLocaleDateString()}`}
+                    ` · Last used ${new Date(k.lastUsedAt).toLocaleDateString("en-US")}`}
                 </div>
               </div>
               {!k.revokedAt && (

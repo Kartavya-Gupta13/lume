@@ -78,14 +78,14 @@ This is the "Linear UI" moment. Polish hard. It's the project's whole visual ide
   - [x] Click row → trace detail (stub page, full detail page below is separate)
 - [ ] `/[orgSlug]/[projectSlug]/traces/[id]` detail page:
   - [x] Header: name, status, duration, tokens, cost, started_at absolute + relative, tags
-  - [ ] Span tree: render the parent-child tree of spans with collapse/expand
-  - [ ] Each span row: icon for type (llm_call, tool_call, agent, retrieval, custom), name, duration bar (gantt-style), status pill
-  - [ ] Click span → side panel with input/output, metadata, events
-  - [ ] Input/output: pretty-print JSON, syntax highlighted, copy button, expand for full payload
-  - [ ] Events: stream of debug/info/warn/error with timestamps and attributes
-  - [ ] Sticky top bar with "Replay" button (wired in next phase)
-- [ ] Empty states designed, not skipped
-- [ ] Mobile rendering does not need to be pretty, but should not crash
+  - [x] Span tree: render the parent-child tree of spans with collapse/expand
+  - [x] Each span row: icon for type (llm_call, tool_call, agent, retrieval, custom), name, duration bar (gantt-style), status pill
+  - [x] Click span → side panel with input/output, metadata, events
+  - [x] Input/output: pretty-print JSON, copy button (syntax highlighting deferred)
+  - [x] Events: stream of debug/info/warn/error with timestamps and attributes
+  - [x] Sticky top bar with "Replay" button (wired in next phase)
+- [x] Empty states designed, not skipped
+- [x] Mobile rendering does not need to be pretty, but should not crash
 
 **Done when:** You can POST a trace via curl using a project API key, navigate to the trace detail page, and see the span tree render correctly. The real dogfooding test (vs Langfuse) happens at the end of Phase 4 once the SDK exists.
 
