@@ -35,7 +35,7 @@ docker compose up
 Then in your app:
 
 ```ts
-import { Lume } from "@lume/sdk";
+import { Lume } from "@lume-kartavya/sdk";
 
 const lume = new Lume({ apiKey: process.env.LUME_API_KEY });
 

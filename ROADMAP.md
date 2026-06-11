@@ -102,8 +102,8 @@ Real instrumentation drives real bug discovery.
   - [x] Batching: queue events in memory, flush every 1s or 100 items
   - [x] Graceful failure: ingestion errors logged once, never throw into user code
   - [x] Configure `tsup` in `packages/sdk-ts` (outputs CJS + ESM + types)
-  - [ ] Publish to npm as `@lume/sdk`
-- [ ] Instrument your PR review agent project with `@lume/sdk`
+  - [x] Publish to npm as `@lume-kartavya/sdk`
+- [ ] Instrument your PR review agent project with `@lume-kartavya/sdk`
 - [ ] Watch traces flow into the dashboard for a real workload
 - [ ] Fix the bugs you find. There will be bugs.
 

@@ -1,5 +1,5 @@
 {
-  "name": "@lume/sdk",
+  "name": "@lume-kartavya/sdk",
   "version": "0.0.1",
   "description": "TypeScript SDK for Lume LLM observability",
   "license": "MIT",
